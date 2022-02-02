@@ -356,27 +356,51 @@ User Function GvrSZ7()
         
 		elseif cOption == MODEL_OPERATION_UPDATE
 		      for nLinAtu := 1 to Len(aColsAux)
-		 		IF !aColsAux[nLinAtu][Len(aHeaderAux)+1] 
-
-                RecLock("SZ7",.T.)
-                // Cabecalho
-                    Z7_FILIAL    := cFilSZ7
-                    Z7_NUM       := cNum   
-                    Z7_EMISSAO   := dEmissao
-                    Z7_FORNECE   := cFornece
-                    Z7_LOJA      := cLoja
-                    Z7_USER      := cUser
-                // Grid
-                    Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
-                    Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
-                    Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
-                    Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
-                    Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
-
-
-                SZ7->(MsUnlock())
-            EndIf
-        Next n
+		 		IF aColsAux[nLinAtu][Len(aHeaderAux)+1] 
+					SZ7->(dbSetOrder(2))
+					If SZ7->(DbSeek(cFilSZ7+cNum+aColsAux[nLinAtu,nPosItem]))
+						RecLock("SZ7",.F.)
+							dbDelete()
+						SZ7->(MsUnlock())
+					EndIf	
+					else
+					SZ7->(dbSetOrder(2))
+					If SZ7->(DbSeek(cFilSZ7+cNum+aColsAux[nLinAtu,nPosItem]))
+						RecLock("SZ7",.F.)
+						// Cabecalho
+							Z7_FILIAL    := cFilSZ7
+							Z7_NUM       := cNum   
+							Z7_EMISSAO   := dEmissao
+							Z7_FORNECE   := cFornece
+							Z7_LOJA      := cLoja
+							Z7_USER      := cUser
+						// Grid
+							Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
+							Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
+							Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
+							Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
+							Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
+							SZ7->(MsUnlock())
+					else
+					SZ7->(dbSetOrder(2))
+						RecLock("SZ7",.T.)
+						// Cabecalho
+							Z7_FILIAL    := cFilSZ7
+							Z7_NUM       := cNum   
+							Z7_EMISSAO   := dEmissao
+							Z7_FORNECE   := cFornece
+							Z7_LOJA      := cLoja
+							Z7_USER      := cUser
+						// Grid
+							Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
+							Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
+							Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
+							Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
+							Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
+							SZ7->(MsUnlock())
+					EndIf	
+				EndIf	
+        	Next n
 			
 
     EndIf
