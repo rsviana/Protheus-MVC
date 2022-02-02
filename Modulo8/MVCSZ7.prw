@@ -353,7 +353,8 @@ User Function GvrSZ7()
                 SZ7->(MsUnlock())
             EndIf
         Next n
-        
+
+		// Inserido para alteracao e nao inclusao
 		elseif cOption == MODEL_OPERATION_UPDATE
 		      for nLinAtu := 1 to Len(aColsAux)
 		 		IF aColsAux[nLinAtu][Len(aHeaderAux)+1] 
@@ -401,10 +402,16 @@ User Function GvrSZ7()
 					EndIf	
 				EndIf	
         	Next n
-			
+  
+		elseif cOption ==  MODEL_OPERATION_DELETE
+				SZ7->((DbSetOrder(1)))
+				While !SZ7->(EOF()) .and. SZ7->Z7_NUM = cNum .and. SZ7->Z7_FILIAL = cFilSZ7
+					RecLock("SZ7",.F.)
+						dbDelete()
+					SZ7->(MsUnlock())
+					SZ7->(DBSKIP())
 
-    EndIf
-
-
+				ENDDO
+		EndIf
     RestArea(aArea)
 Return lRet
