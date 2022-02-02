@@ -354,6 +354,30 @@ User Function GvrSZ7()
             EndIf
         Next n
         
+		elseif cOption == MODEL_OPERATION_UPDATE
+		      for nLinAtu := 1 to Len(aColsAux)
+		 		IF !aColsAux[nLinAtu][Len(aHeaderAux)+1] 
+
+                RecLock("SZ7",.T.)
+                // Cabecalho
+                    Z7_FILIAL    := cFilSZ7
+                    Z7_NUM       := cNum   
+                    Z7_EMISSAO   := dEmissao
+                    Z7_FORNECE   := cFornece
+                    Z7_LOJA      := cLoja
+                    Z7_USER      := cUser
+                // Grid
+                    Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
+                    Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
+                    Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
+                    Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
+                    Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
+
+
+                SZ7->(MsUnlock())
+            EndIf
+        Next n
+			
 
     EndIf
 
