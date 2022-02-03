@@ -38,6 +38,8 @@ Static Function ModelDef()
 	Local bVldPos 	:= {||u_VldSZ7()}
     Local bVldCom   := {||u_GvrSZ7()}
 	Local oModel    := MPFormModel():New("MVCSZ7m",/*bPre*/,bVldPos /*bPos*/, bVldCom /*bCommit*/,/*bCancel*/)
+	Local aTrigQuant := {}
+	Local aTrgPreco  := {}
 
 
 
@@ -139,6 +141,26 @@ Static Function ModelDef()
     oStItens:SetProperty("Z7_FORNECE",  MODEL_FIELD_INIT, FwBuildFeature(STRUCT_FEATURE_INIPAD, '"*"'))
     oStItens:SetProperty("Z7_LOJA",     MODEL_FIELD_INIT, FwBuildFeature(STRUCT_FEATURE_INIPAD, '"*"'))
 
+
+	aTrigQuant := FwStruTrigger(;
+								"Z7_QUANT" ,; // Campo Dominio
+								"Z7_TOTAL" ,; // Campo de Contradominio
+								"M->Z7_QUANT * M->Z7_PRECO",; // Regra de Preenchimento
+								.F. ,)    
+
+	aTrgPreco := FwStruTrigger(;
+								"Z7_PRECO" ,; // Campo Dominio
+								"Z7_TOTAL" ,; // Campo de Contradominio
+								"M->Z7_QUANT * M->Z7_PRECO",; // Regra de Preenchimento
+								.F. ,)    
+
+	oStItens:AddTrigger(;
+				aTrigQuant[1],;
+				aTrigQuant[2],;
+				aTrigQuant[3],;
+				aTrigQuant[4],)
+
+
 	oModel:AddFields("SZ7MASTER",,oStCabec) //Faço a vinculação com o oStCabe(cabeçalho e itens temporários)
 	oModel:AddGrid("SZ7DETAIL","SZ7MASTER",oStItens,,,,,)
 
@@ -151,13 +173,18 @@ Static Function ModelDef()
 
 	oModel:SetRelation('SZ7DETAIL',{{'Z7_FILIAL','Iif(!INCLUI, SZ7->Z7_FILIAL, FWxFilial("SZ7"))'},{'Z7_NUM','SZ7->Z7_NUM'}},SZ7->(IndexKey(1)))
 
-
-
 	oModel:SetPrimaryKey({})
 	oModel:GetModel("SZ7DETAIL"):SetUniqueline({"Z7_ITEM"} )
 	oModel:GetModel("SZ7MASTER"):SetDescription("Cabecalho Compras")
 	oModel:GetModel("SZ7DETAIL"):SetDescription("ITENS DA SOLICITAÇÃO DE COMPRAS")
 	oModel:GetModel("SZ7DETAIL"):SetUseOldGrid(.T.)
+
+
+	oStru:AddTrigger( ;
+      aAux[1] , ;       // [01] Id do campo de origem
+      aAux[2] , ;       // [02] Id do campo de destino
+      aAux[3] , ;       // [03] Bloco de codigo de validação da execução do gatilho
+      aAux[4] )         // [04] Bloco de codigo de execução do gatilho
 
 Return oModel
 
@@ -270,8 +297,6 @@ Static Function ViewDef()
 	Nil,;                       // [17]  C   Picture Variavel
 	Nil)
 
-
-
 	oStItens:RemoveField("Z7_NUM")
 	oStItens:RemoveField("Z7_EMISSAO")
 	oStItens:RemoveField("Z7_FORNECE")
@@ -302,7 +327,6 @@ Static Function ViewDef()
 
 
 Return oView
-
 
 User Function GvrSZ7()
     Local lRet := .T.
