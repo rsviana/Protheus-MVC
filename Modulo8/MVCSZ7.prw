@@ -35,8 +35,9 @@ Return aRotina
 Static Function ModelDef()
 	Local oStCabec  := FwFormModelStruct():New()
 	Local oStItens  := FWFormStruct(1, "SZ7")
+	Local bVldPos 	:= {||u_VldSZ7()}
     Local bVldCom   := {||u_GvrSZ7()}
-	Local oModel    := MPFormModel():New("MVCSZ7m",/*bPre*/,/* bVldPos bPos*/, bVldCom /*bCommit*/,/*bCancel*/)
+	Local oModel    := MPFormModel():New("MVCSZ7m",/*bPre*/,bVldPos /*bPos*/, bVldCom /*bCommit*/,/*bCancel*/)
 
 
 
@@ -414,4 +415,26 @@ User Function GvrSZ7()
 				ENDDO
 		EndIf
     RestArea(aArea)
+Return lRet
+
+
+User Function VldSZ7()
+	Local lRet			:= .T.
+	Local aArea 		:= GetArea()
+ 	Local oModel 		:= FwModelActive()
+    Local oModelCabec   := oModel:GetModel("SZ7MASTER")
+    Local cFilSZ7       := oModelCabec:GetValue("Z7_FILIAL")
+    Local cNum          := oModelCabec:GetValue("Z7_NUM")
+	Local cOption 		:= oModelCabec:GetOperation()
+
+		If cOption == MODEL_OPERATION_INSERT
+			dbSelectArea("SZ7")
+			SZ7->(dbSetOrder(1))
+				If SZ7->(DbSeek(cFilSZ7+cNum))
+					Help(Nil,Nil, "Escolha outro numero de pedido",Nil," Este pedido de compras já existe no nosso sistena",1,0,Nil,Nil,Nil,Nil,Nil,{"ATENCAO"})
+					lRet := .F.
+				EndIf
+		EndIf	
+		RestArea(aArea)
+	
 Return lRet
