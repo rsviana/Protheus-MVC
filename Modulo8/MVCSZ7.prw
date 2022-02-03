@@ -50,7 +50,7 @@ Static Function ModelDef()
 	oStCabec:AddField("Filial","Filial","Z7_FILIAL","C",TamSX3("Z7_FILIAL")[1],0,Nil,Nil,{},.F.,FwBuildFeature( STRUCT_FEATURE_INIPAD, "Iif(!INCLUI,SZ7->Z7_FILIAL,FWxFilial('SZ7'))" ), .T.,.F.,.F.)
 
 	oStCabec:AddField(;
-		"Pedido",;                                                                                  // [01]  C   Titulo do campo
+	"Pedido",;                                                                                  // [01]  C   Titulo do campo
 	"Pedido",;                                                                                  // [02]  C   ToolTip do campo
 	"Z7_NUM",;                                                                                  // [03]  C   Id do Field
 	"C",;                                                                                       // [04]  C   Tipo do campo
@@ -66,7 +66,7 @@ Static Function ModelDef()
 	.F.)                                                                                        // [14]  L   Indica se o campo é virtual
 
 	oStCabec:AddField(;
-		"Emissao",;                                                                     // [01]  C   Titulo do campo
+	"Emissao",;                                                                     // [01]  C   Titulo do campo
 	"Emissao",;                                                                     // [02]  C   ToolTip do campo
 	"Z7_EMISSAO",;                                                                  // [03]  C   Id do Field
 	"D",;                                                                           // [04]  C   Tipo do campo
@@ -83,7 +83,7 @@ Static Function ModelDef()
 
 
 	oStCabec:AddField(;
-		"Fornecedor",;                                                              // [01]  C   Titulo do campo
+	"Fornecedor",;                                                              // [01]  C   Titulo do campo
 	"Fornecedor",;                                                              // [02]  C   ToolTip do campo
 	"Z7_FORNECE",;                                                              // [03]  C   Id do Field
 	"C",;                                                                       // [04]  C   Tipo do campo
@@ -99,7 +99,7 @@ Static Function ModelDef()
 	.F.)                                                                        // [14]  L   Indica se o campo é virtual
 
 	oStCabec:AddField(;
-		"Loja",;                                                                      // [01]  C   Titulo do campo
+	"Loja",;                                                                      // [01]  C   Titulo do campo
 	"Loja",;                                                                      // [02]  C   ToolTip do campo
 	"Z7_LOJA",;                                                                   // [03]  C   Id do Field
 	"C",;                                                                         // [04]  C   Tipo do campo
@@ -286,6 +286,9 @@ Static Function ViewDef()
 
 	oView:AddField("VIEW_SZ7M",oStCabec,"SZ7MASTER") //Crio a view do Cabeçalho/Master
 	oView:AddGrid("VIEW_SZ7D", oStItens,"SZ7DETAIL")
+
+	oView:AddIncrementField("SZ7DETAIL","Z7_ITEM")
+
 	oView:CreateHorizontalBox("CABEC",30)
 	oView:CreateHorizontalBox("GRID",60)
 
@@ -417,7 +420,7 @@ User Function GvrSZ7()
     RestArea(aArea)
 Return lRet
 
-
+// Funcao não esta sendo usada pois o codigo esta vindo automatico pelo licence, neste caso não houve necessidade de validação do mesmo.
 User Function VldSZ7()
 	Local lRet			:= .T.
 	Local aArea 		:= GetArea()
