@@ -42,7 +42,6 @@ Static Function ModelDef()
 	Local aTrgPreco  := {}
 
 
-
 //Criacao da tabela temporaria
 
 	oStCabec:AddTable("SZ7",{"Z7_FILIAL" ,"Z7_NUM","Z7_ITEM"},"Cabecalho SZ7")
@@ -142,10 +141,15 @@ Static Function ModelDef()
     oStItens:SetProperty("Z7_LOJA",     MODEL_FIELD_INIT, FwBuildFeature(STRUCT_FEATURE_INIPAD, '"*"'))
 
 
+/*   ATENCAO
+	Corrigir bug no gatilho que nao preeche quando inicia a digitacao pela quantidade.
+	No aTrgPreco funciona normalmente
+*/
+				
 	aTrigQuant := FwStruTrigger(;
 								"Z7_QUANT" ,; // Campo Dominio
 								"Z7_TOTAL" ,; // Campo de Contradominio
-								"M->Z7_QUANT * M->Z7_PRECO",; // Regra de Preenchimento
+								"M->Z7_PRECO * M->Z7_QUANT",; // Regra de Preenchimento
 								.F. ,)    
 
 	aTrgPreco := FwStruTrigger(;
@@ -178,14 +182,6 @@ Static Function ModelDef()
 	oModel:GetModel("SZ7MASTER"):SetDescription("Cabecalho Compras")
 	oModel:GetModel("SZ7DETAIL"):SetDescription("ITENS DA SOLICITAÇÃO DE COMPRAS")
 	oModel:GetModel("SZ7DETAIL"):SetUseOldGrid(.T.)
-
-
-	oStru:AddTrigger( ;
-      aAux[1] , ;       // [01] Id do campo de origem
-      aAux[2] , ;       // [02] Id do campo de destino
-      aAux[3] , ;       // [03] Bloco de codigo de validação da execução do gatilho
-      aAux[4] )         // [04] Bloco de codigo de execução do gatilho
-
 Return oModel
 
 
