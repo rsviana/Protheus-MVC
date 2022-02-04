@@ -378,18 +378,18 @@ User Function GvrSZ7()
 
                 RecLock("SZ7",.T.)
                 // Cabecalho
-                    Z7_FILIAL    := cFilSZ7
-                    Z7_NUM       := cNum   
-                    Z7_EMISSAO   := dEmissao
-                    Z7_FORNECE   := cFornece
-                    Z7_LOJA      := cLoja
-                    Z7_USER      := cUser
+                    Z7_FILIAL  := cFilSZ7
+                    Z7_NUM     := cNum
+                    Z7_EMISSAO := dEmissao
+                    Z7_FORNECE := cFornece
+                    Z7_LOJA    := cLoja
+                    Z7_USER    := cUser
                 // Grid
-                    Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
-                    Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
-                    Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
-                    Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
-                    Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
+                    Z7_ITEM    := aColsAux[nLinAtu,nPosItem]
+                    Z7_PRODUTO := aColsAux[nLinAtu,nPosProd]
+                    Z7_QUANT   := aColsAux[nLinAtu,nPosQtd]
+                    Z7_PRECO   := aColsAux[nLinAtu,nPosPrc]
+                    Z7_TOTAL   := aColsAux[nLinAtu,nPosTotal]
 
 
                 SZ7->(MsUnlock())
@@ -428,18 +428,18 @@ User Function GvrSZ7()
 					SZ7->(dbSetOrder(2))
 						RecLock("SZ7",.T.)
 						// Cabecalho
-							Z7_FILIAL    := cFilSZ7
-							Z7_NUM       := cNum   
-							Z7_EMISSAO   := dEmissao
-							Z7_FORNECE   := cFornece
-							Z7_LOJA      := cLoja
-							Z7_USER      := cUser
+							Z7_FILIAL  := cFilSZ7
+							Z7_NUM     := cNum
+							Z7_EMISSAO := dEmissao
+							Z7_FORNECE := cFornece
+							Z7_LOJA    := cLoja
+							Z7_USER    := cUser
 						// Grid
-							Z7_ITEM     := aColsAux[nLinAtu,nPosItem]
-							Z7_PRODUTO  := aColsAux[nLinAtu,nPosProd]
-							Z7_QUANT    := aColsAux[nLinAtu,nPosQtd]
-							Z7_PRECO    := aColsAux[nLinAtu,nPosPrc]
-							Z7_TOTAL    := aColsAux[nLinAtu,nPosTotal]
+							Z7_ITEM    := aColsAux[nLinAtu,nPosItem]
+							Z7_PRODUTO := aColsAux[nLinAtu,nPosProd]
+							Z7_QUANT   := aColsAux[nLinAtu,nPosQtd]
+							Z7_PRECO   := aColsAux[nLinAtu,nPosPrc]
+							Z7_TOTAL   := aColsAux[nLinAtu,nPosTotal]
 							SZ7->(MsUnlock())
 					EndIf	
 				EndIf	
@@ -460,13 +460,13 @@ Return lRet
 
 // Funcao não esta sendo usada pois o codigo esta vindo automatico pelo licence, neste caso não houve necessidade de validação do mesmo.
 User Function VldSZ7()
-	Local lRet			:= .T.
-	Local aArea 		:= GetArea()
- 	Local oModel 		:= FwModelActive()
-    Local oModelCabec   := oModel:GetModel("SZ7MASTER")
-    Local cFilSZ7       := oModelCabec:GetValue("Z7_FILIAL")
-    Local cNum          := oModelCabec:GetValue("Z7_NUM")
-	Local cOption 		:= oModelCabec:GetOperation()
+	Local lRet        := .T.
+	Local aArea       := GetArea()
+ 	Local oModel      := FwModelActive()
+    Local oModelCabec := oModel:GetModel("SZ7MASTER")
+    Local cFilSZ7     := oModelCabec:GetValue("Z7_FILIAL")
+    Local cNum        := oModelCabec:GetValue("Z7_NUM")
+	Local cOption     := oModelCabec:GetOperation()
 
 		If cOption == MODEL_OPERATION_INSERT
 			dbSelectArea("SZ7")
@@ -475,7 +475,7 @@ User Function VldSZ7()
 					Help(Nil,Nil, "Escolha outro numero de pedido",Nil," Este pedido de compras já existe no nosso sistena",1,0,Nil,Nil,Nil,Nil,Nil,{"ATENCAO"})
 					lRet := .F.
 				EndIf
-		EndIf	
+		EndIf
 		RestArea(aArea)
 	
 Return lRet
