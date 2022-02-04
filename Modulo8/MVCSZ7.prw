@@ -140,11 +140,6 @@ Static Function ModelDef()
     oStItens:SetProperty("Z7_FORNECE",  MODEL_FIELD_INIT, FwBuildFeature(STRUCT_FEATURE_INIPAD, '"*"'))
     oStItens:SetProperty("Z7_LOJA",     MODEL_FIELD_INIT, FwBuildFeature(STRUCT_FEATURE_INIPAD, '"*"'))
 
-
-/*   ATENCAO
-	Corrigir bug no gatilho que nao preeche quando inicia a digitacao pela quantidade.
-	No aTrgPreco funciona normalmente
-*/
 				
 	aTrigQuant := FwStruTrigger(;
 								"Z7_QUANT" ,; // Campo Dominio
@@ -165,8 +160,21 @@ Static Function ModelDef()
 				aTrigQuant[4],)
 
 
+	oStItens:AddTrigger(;
+				aTrgPreco[1],;
+				aTrgPreco[2],;
+				aTrgPreco[3],;
+				aTrgPreco[4],)
+
+
 	oModel:AddFields("SZ7MASTER",,oStCabec) //Faço a vinculação com o oStCabe(cabeçalho e itens temporários)
 	oModel:AddGrid("SZ7DETAIL","SZ7MASTER",oStItens,,,,,)
+
+
+	// Adicionando os Totalizadores -  Esses sao os "Campos que aparecem na View" 
+	oModel:AddCalc("CALCTOTAL","SZ7MASTER","SZ7DETAIL","Z7_PRODUTO","QTDITENS","COUNT",,,"Numero de Produtos")
+	oModel:AddCalc("CALCTOTAL","SZ7MASTER","SZ7DETAIL","Z7_QUANT","QTDTOTAL","SUM",,,"Total de Itens")
+	oModel:AddCalc("CALCTOTAL","SZ7MASTER","SZ7DETAIL","Z7_TOTAL","PRCTOTAL","SUM",,,"Preço TOTAL")
 
 	//Alterado para ver se funciona
 	// oModel:SetRelation("SZ7DETAIL",{{"Z7_FILIAL","'Iif(!INCLUI,SZ7->Z7_FILIAL,FWxFilial('SZ7'))'"},{"Z7_NUM","SZ7->Z7_NUM"}},SZ7->(INDEXKEY(1)))
@@ -192,6 +200,8 @@ Static Function ViewDef()
 	Local oStCabec := FwFormViewStruct():New()
 
 	Local oStItens    := FwFormStruct(2,"SZ7")
+
+	Local oStTotais   := FWCalcStruct(oModel:GetModel("CALCTOTAL"))
 
 	oStCabec:AddField(;
 		"Z7_NUM",;                  // [01]  C   Nome do Campo
@@ -299,6 +309,10 @@ Static Function ViewDef()
 	oStItens:RemoveField("Z7_LOJA")
 	oStItens:RemoveField("Z7_USER")
 
+//CLoqueando os campos item e total para serem editados. 
+	oStItens:SetProperty("Z7_ITEM",MVC_VIEW_CANCHANGE,.f.)
+	oStItens:SetProperty("Z7_TOTAL", MVC_VIEW_CANCHANGE,.f.)
+
 //Segunda PArte da ViewDef
 
 	oView := FwFormView():New()
@@ -307,17 +321,21 @@ Static Function ViewDef()
 
 	oView:AddField("VIEW_SZ7M",oStCabec,"SZ7MASTER") //Crio a view do Cabeçalho/Master
 	oView:AddGrid("VIEW_SZ7D", oStItens,"SZ7DETAIL")
+	oView:AddField("VIEW_TOTAL",oStTotais,"CALCTOTAL") // Cruiando a View do totalizador
 
 	oView:AddIncrementField("SZ7DETAIL","Z7_ITEM")
 
-	oView:CreateHorizontalBox("CABEC",30)
-	oView:CreateHorizontalBox("GRID",60)
+	oView:CreateHorizontalBox("CABEC",20)
+	oView:CreateHorizontalBox("GRID",50)
+	oView:CreateHorizontalBox("TOTAL",30)
 
 	oView:SetOwnerView("VIEW_SZ7M","CABEC")
 	oView:SetOwnerView("VIEW_SZ7D","GRID")
+	oView:SetOwnerView("VIEW_TOTAL","TOTAL")
 
 	oView:EnableTitleView("VIEW_SZ7M","Cabeçalho Solicitação de Compras")
 	oView:EnableTitleView("VIEW_SZ7D","ITens de Solicitcao de compras")
+	oView:EnableTitleView("VIEW_TOTAL","Resumo da Solicitação de compras")
 
 	oView:SetCloseOnOk({||.T.})
 
